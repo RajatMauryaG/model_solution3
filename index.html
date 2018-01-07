@@ -5,8 +5,20 @@
     <title>Narrow Down your menu choices</title>
     <script type="text/javascript" src="angular.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
+    <div class="contanier" ng-controller="NarrowItDownController as Ctrl">
+      <h1>Narrow Down Your Chinese Menu Choice</h1>
+      <div class="form-group">
+        <input  type="text" class="form-control" ng-model="Ctrl.searchItem" placeholder="searchTerm">
+      </div>
+      <div class="form-group narrow-button">
+        <button type="button" class="btn btn-primary" ng-click="Ctrl.menulogItem(Ctrl.searchItem);">Narrow It down for me!</button>
+      </div>
 
+      <found-items found-items="" on-remove=""></found-items>
+    </div>
   </body>
 </html>
