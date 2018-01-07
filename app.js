@@ -38,11 +38,11 @@ function NarrowItDownController(MenuCategoriesService) {
 
     promise.then(function (response) {
       menu.data=response.data;
-      console.log(response.data);
+      // console.log(response.data);
 
     })
     .catch(function (error) {
-      console.log(error);
+      console.log("Something wrong");
     });
 
   menu.founditems = [];
@@ -51,8 +51,8 @@ function NarrowItDownController(MenuCategoriesService) {
   menu.logSearchItem = function (searchItem) {
     for (var i = 0; i < menu.data.menu_items.length; i++) {
       var description = menu.data.menu_items[i].description;
-      console.log(description);
-      console.log(searchItem);
+      // console.log(description);
+      // console.log(searchItem);
       if(searchItem.toLowerCase().search(description.toLowerCase()) !== -1)
       {
         var item = {
@@ -65,7 +65,7 @@ function NarrowItDownController(MenuCategoriesService) {
       else {
         console.log("Not Found");
       }
-      console.log(menu.found_item);
+      // console.log(menu.found_item);
     }
 
   };
