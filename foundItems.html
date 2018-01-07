@@ -1,0 +1,7 @@
+<ul>
+  <h2>Found List</h2>
+  <li ng-repeat="item in fmenu.founditems">
+     ({{ item.short_name }})  {{ item.name}}
+     <button  ng-click="fmenu.onRemove({index: $index});">Don't want this one!</button><br>
+  </li>
+</ul>

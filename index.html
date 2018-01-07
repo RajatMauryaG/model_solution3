@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="">
+<html lang="en" ng-app="NarrowItDownApp">
   <head>
     <meta name="viewport" content="width=device-width, intial-sacle=1" charset="utf-8">
     <title>Narrow Down your menu choices</title>
@@ -9,16 +9,16 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <div class="contanier" ng-controller="NarrowItDownController as Ctrl">
+    <div class="contanier" ng-controller="NarrowItDownController as menu">
       <h1>Narrow Down Your Chinese Menu Choice</h1>
       <div class="form-group">
-        <input  type="text" class="form-control" ng-model="Ctrl.searchItem" placeholder="searchTerm">
+        <input  type="text" class="form-control" ng-model="menu.searchItem" placeholder="searchTerm">
       </div>
       <div class="form-group narrow-button">
-        <button type="button" class="btn btn-primary" ng-click="Ctrl.menulogItem(Ctrl.searchItem);">Narrow It down for me!</button>
+        <button type="button" class="btn btn-primary" ng-click="menu.logSearchItem(menu.searchItem);">Narrow It down for me!</button>
+          <!-- {{ menu.data.menu_items }} -->
       </div>
-
-      <found-items found-items="" on-remove=""></found-items>
+      <found-items founditems="menu.founditems" on-remove="menu.removeItem(index)"></found-items>
     </div>
   </body>
 </html>
