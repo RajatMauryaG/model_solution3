@@ -1,97 +1,67 @@
 (function () {
-'use strict';
+    'use strict';
 
-angular.module('NarrowItDownApp', [])
-.controller('NarrowItDownController', NarrowItDownController)
-.controller('foundItemsDirectiveController', foundItemsDirectiveController)
-.service('MenuCategoriesService', MenuCategoriesService)
-.constant('ApiBasePath', "https://davids-restaurant.herokuapp.com")
-.directive('foundItems', FoundItemsDirective);
+    angular.module('NarrowItDownApp', [])
+    .controller('NarrowItDownController', NarrowItDownController)
+    .service('MenuSearchService', MenuSearchService)
+    .directive('foundItems', FoundItemsDirective);
 
+    NarrowItDownController.$inject = ['MenuSearchService'];
+    function NarrowItDownController(MenuSearchService) {
+        var ctrl = this;
 
-
-function FoundItemsDirective() {
-  var ddo = {
-    templateUrl : 'foundItems.html',
-    scope : {
-      founditems : '<',
-      onRemove   : '&'
-    },
-    controller : foundItemsDirectiveController,
-    controllerAs : 'fmenu',
-    bindToController: true
-
-   };
-   return ddo;
-}
-
-function foundItemsDirectiveController() {
-  var fmenu = this;
-}
-
-
-NarrowItDownController.$inject = ['MenuCategoriesService'];
-function NarrowItDownController(MenuCategoriesService) {
-  var menu = this;
-
-  var promise = MenuCategoriesService.getMenuForCategory();
-
-    promise.then(function (response) {
-      menu.data=response.data;
-      // console.log(response.data);
-
-    })
-    .catch(function (error) {
-      console.log("Something wrong");
-    });
-
-  menu.founditems = [];
-
-  menu.searchItem = "";
-  menu.logSearchItem = function (searchItem) {
-    for (var i = 0; i < menu.data.menu_items.length; i++) {
-      var description = menu.data.menu_items[i].description;
-      // console.log(description);
-      // console.log(searchItem);
-      if(searchItem.toLowerCase().search(description.toLowerCase()) !== -1)
-      {
-        var item = {
-          short_name:  menu.data.menu_items[i].short_name,
-          name :  menu.data.menu_items[i].name
+        ctrl.foundItems = [];
+        ctrl.search = function (searchTerm) {
+            ctrl.foundItems = [];
+            if (!searchTerm)
+                return;
+            ctrl.foundItems = [];
+            var promise = MenuSearchService.getMatchedMenuItems(searchTerm);
+            promise.then(function (result) {
+                ctrl.foundItems = result;
+            },
+            function (error) {
+                console.log(error);
+            });
         };
-        menu.founditems.push(item);
-
-      }
-      else {
-        console.log("Not Found");
-      }
-      // console.log(menu.found_item);
+        ctrl.removeItem = function (index) {
+            ctrl.foundItems.splice(index, 1);
+        };
     }
 
-  };
+    MenuSearchService.$inject = ['$http'];
+    function MenuSearchService($http) {
+        var URL = 'https://davids-restaurant.herokuapp.com/menu_items.json';
 
-  menu.removeItem = function (itemIndex) {
-    menu.founditems.splice(itemIndex, 1);
-  };
+        var service = this;
+        service.getMatchedMenuItems = function (searchTerm) {
+            return $http({
+                url: URL
+            })
+            .then(
+                function success(response) {
+                    return response.data.menu_items.filter(function (item) {
+                        return item.description.indexOf(searchTerm) != -1;
+                    });
+                },
+                function error(response) {
+                    console.log("ERROR");
+                }
+            );
+        };
+    }
 
-}
+    function FoundItemsDirective() {
+        var ddo = {
+            restrict: 'E',
+            templateUrl: 'foundItems.html',
+            scope: {
+                foundItems: '<',
+                removedOn: '&onRemove'
+            }
+        };
+        return ddo;
+    }
 
-
-MenuCategoriesService.$inject = ['$http', 'ApiBasePath'];
-function MenuCategoriesService($http, ApiBasePath) {
-  var service = this;
-
-  service.getMenuForCategory = function () {
-    var response = $http({
-      method: "GET",
-      url: (ApiBasePath + "/menu_items.json")
-    });
-
-    return response;
-  };
-
-
-
-}
 
 })();

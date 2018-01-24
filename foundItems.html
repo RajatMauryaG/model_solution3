@@ -1,7 +1,22 @@
-<ul>
-  <h2>Found List</h2>
-  <li ng-repeat="item in fmenu.founditems">
-     ({{ item.short_name }})  {{ item.name}}
-     <button  ng-click="fmenu.onRemove({index: $index});">Don't want this one!</button><br>
-  </li>
-</ul>
+<p ng-if='!foundItems.length' style="color: red">Nothing found</p>
+<table ng-if='foundItems.length' class="table table-sm table-responsive">
+    <caption><mark class="lead">Selected items</mark></caption>
+    <th>
+        <tr>
+            <th scope="col">Item#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Short Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Remove item</th>
+        </tr>
+    </th>
+    <tbody>
+        <tr ng-repeat="item in foundItems">
+            <td>{{$index + 1}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.short_name}}</td>
+            <td>{{item.description}}</td>
+            <td><button class="btn btn-danger" ng-click="removedOn({itemIndex: $index})">Don't want this one!</button></td>
+        </tr>
+    </tbody>
+</table>
